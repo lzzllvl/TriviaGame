@@ -14,15 +14,17 @@
     <h1>Trivia Game</h1>
   </header>
   <section id="question">
-    <span id="timer"></span>
+    <span id="timer"></span><br>
     <span id="body"></span>
-    <ul id="answers">
-      <li id="a"></li>
-      <li id="b"></li>
-      <li id="c"></li>
-      <li id="d"></li>
-    </ul>
+    <form id="answers">
+      <input type="radio" name="answer" value="a"><span id="a"></span><br>
+      <input type="radio" name="answer" value="b"><span id="b"></span><br>
+      <input type="radio" name="answer" value="c"><span id="c"></span><br>
+      <input type="radio" name="answer" value="d"><span id="d"></span><br><br>
+      <input type="button" name="submit" value="Submit">
+    </form>
   </section>
+  <button id="start">Start Game</button>
   <aside id="game-data">
 
   </aside>
