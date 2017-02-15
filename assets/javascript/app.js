@@ -17,35 +17,40 @@ function Question(body, a, b, c, d, correctKey){
       return false;
     }
   };
-
 }
 
 //array to hold question objects
 let questionObjectArray = [];
 
 //making a test Question
-let test = new Question("This is a Test Question", "first", "second", "third", "fourth", "b");
+const test = new Question("This is a Test Question", "first", "second", "third", "fourth", "b");
 questionObjectArray.push(test);
+const q1  = new Question("How many planets are in the Solar System?", "Eight", "Seven", "Nine", "Infinite", "a");
+questionObjectArray.push(q1);
+const q2 = new Question("What is the Nearest Galaxy to our Own?", "Olsec-1", "Milky Way", "Andromeda", "The Degoba System", "c");
+questionObjectArray.push(q2);
 
 //need to make an intervalID for setting timer
-var intervalID;
 
 
 //create the game object literal, only need one so no constructor
 //this is performing controller logic
 const game = {
   //properties
+  intervalID: null,
   state: null,
   timeLimit: null,
   timeLeft: null,
   correctAnswers: null,
   incorrectAnswers: null,
+  current: null,
 
 
   //methods
   init: () => {
+    game.current = game.getQuestion();
     game.state = false;
-    game.timeLimit = 7000; //ms
+    game.timeLimit = 10000; //ms
     game.timeLeft = game.timeLimit / 1000; // this is to display the seconds
     game.correctAnswers = 0;
     game.incorrectAnswers = 0;
@@ -53,6 +58,8 @@ const game = {
 
   startGame: () => {
     game.state = true;
+    game.displayQuestion();
+    game.addAnswerClicks();
     game.startTimer();
   },
 
@@ -60,9 +67,7 @@ const game = {
     game.timeLeft = game.timeLimit / 1000; //this is to display in seconds
   },
 
-  submitAnswer: () => {},
-
-  checkAnswer: (answer, question) => {
+  submitAnswer: (answer, question) => {
     //this game object method will call the question method checkAnswer()
     //increments either correct or incorrect answer counts
     if(question.isCorrectAnswer(answer)){
@@ -71,24 +76,60 @@ const game = {
     else {
       game.incorrectAnswers++;
     }
+    game.current = game.getQuestion();
+    game.displayQuestion();
+    game.addAnswerClicks();
+    game.resetTimer();
+  },
+
+  checkAnswer: () => {
+
+
   },
 
   getQuestion: () => {
     //returns a random question from the question array.
-    return questionObjectArray.splice(Math.floor(Math.random() * questionObjectArray.length), 1 )
+    let q = questionObjectArray.splice(Math.floor(Math.random() * questionObjectArray.length), 1 )
+    q = q[0];//splice is going to return a single item array;
+    return q;
   },
 
   startTimer: () => {
-    intervalID = setInterval(count, 1000);
+    game.intervalID = setInterval(game.countDown, 1000);
   },
 
   stopTimer: () => {
-    clearInterval(intervalID);
+    clearInterval(game.intervalID);
   },
 
-  count: () => {
+  countDown: () => {
     game.timeLeft--;
     $("#timer").html(game.timeLeft);
+  },
+
+  addAnswerClicks: () => {
+      const letters = ["a", "b", "c", "d"];
+      for(let i = 0; i < letters.length; i++){
+        let id = "#"+letters[i];
+        $(id).on("click", () => {
+          //game.submitAnswer has not been implemented yet.
+          game.submitAnswer(letters[i], game.current);
+        })
+      }
+    },
+
+  displayQuestion: () => {
+      $("#body").html(game.current.body);
+      $("#a").html(game.current.a);
+      $("#b").html(game.current.b);
+      $("#c").html(game.current.c);
+      $("#d").html(game.current.d);
+    },
+
+  isGameOver: () => {
+    if(questionObjectArray.length == 0){
+      console.log("question Array empty");
+    }
   }
 };
 //TODO need to fix the submit answer and display question functions to give
@@ -96,29 +137,9 @@ const game = {
 
 //need to do DOM manipulation
 //function for displaying the current question
-let displayQuestion = () => {
-  let current = game.getQuestion();
-  current = current[0]; // get question returns a one item array
-  $("#body").html(current.body);
-  $("#a").html(current.a);
-  $("#b").html(current.b);
-  $("#c").html(current.c);
-  $("#d").html(current.d);
-}
 
-//this is designed as a array.map() callback
-let addAnswerClicks = () => {
-    const letters = ["a", "b", "c", "d"]
-    for(let i = 0; i < letters.length; i++){
-      var id = "#"+letters[i];
-      $(id).on("click", () => {
-        //game.submitAnswer has not been implemented yet.
-        game.submitAnswer(letters[i]);
-      })
-    }
-  };
+// let current = game.getQuestion();
+// current = current[0]; // get question returns a one item array
 
 
-displayQuestion();
-addAnswerClicks();
 game.init();
