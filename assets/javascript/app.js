@@ -160,11 +160,20 @@ const game = {
 
 // let current = game.getQuestion();
 // current = current[0]; // get question returns a one item array
-
-$("form").hide()
-$("button").on("click", () => {
+$("#submit").hide();
+$("#submit").on("click",() => {
+  //did some checking here, need to implement game functionality yet though
+  console.log("triggering submit")
+  console.log($("input[name=answer]:checked").val());
+});
+$("form").hide();
+$("#submit").hide();
+$("#start").on("click", () => {
   game.init();
   game.startGame();
+
   $("form").show();
-  $("button").hide();
+  $("#submit").show();
+
+  $("#start").hide();
 });
