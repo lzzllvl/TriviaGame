@@ -1,8 +1,33 @@
 html, body {
-  background-image: url("../images/sayagata-400px.png");
+  background-image: url("../images/spatiul-cosmic.jpg");
+  background-repeat: no-repeat;
+  background-color: black;
   width: 100%;
   height: 100%;
 }
+
+header {
+  height: 75px;
+  background-color: black;
+  border-style: outset;
+  border-width: 0 0 4px 0;
+  border-color: purple;
+  padding: 7px 0;
+  text-align: center;
+}
+
+section {
+  font-family: 'Arial', 'Helvetica Neue', Helvetica, sans-serif;
+  text-align: center;
+  margin: 15 auto;
+  padding-top: 8px;
+  color: white;
+}
+
+#submit {
+  display: hidden;
+}
+
 
 
 
@@ -19,9 +44,9 @@ html, body {
 }
 #footer {
   margin-top: 16px;
-  border-style: outset;
-  border-width: 7px 0px 0px 0px;
-  border-color: #FFEF20;
+  border-style: inset;
+  border-width: 5px 0px 0px 0px;
+  border-color: purple;
   background-color: black;
   min-width: 960px;
   width: 100%;

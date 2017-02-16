@@ -1,3 +1,4 @@
+
 // create a question constructor
 function Question(body, a, b, c, d, correctKey){
   this.body = body;
@@ -22,8 +23,8 @@ function Question(body, a, b, c, d, correctKey){
 let questionObjectArray = [];
 
 //making a test Question
-const test = new Question("This is a Test Question", "first", "second", "third", "fourth", "b");
-questionObjectArray.push(test);
+// const test = new Question("This is a Test Question", "first", "second", "third", "fourth", "b");
+// questionObjectArray.push(test);
 const q1  = new Question("How many planets are in the Solar System?", "Eight", "Seven", "Nine", "Too Many To Count", "a");
 questionObjectArray.push(q1);
 const q2 = new Question("What is the Nearest Galaxy to our Own?", "Olsec-1", "Milky Way", "Andromeda", "The Degoba System", "c");
@@ -34,11 +35,11 @@ const q4 = new Question("Which type of celestial body lies at the center of our 
 questionObjectArray.push(q4);
 const q5 = new Question("Where do our solar system's comets come from?", "They break off of large moons", "The Asteroid Belt", "The Ort Cloud", "Cthulhu", "c");
 questionObjectArray.push(q5);
-const q6 = new Question("How long does it take light from the Sun to reach Earth", "15 seconds", "8 minutes", "1-2 hours", "25 milliseconds", "b");
+const q6 = new Question("How long does it take light from the Sun to reach Earth?", "15 seconds", "8 minutes", "1-2 hours", "25 milliseconds", "b");
 questionObjectArray.push(q6);
-const q7 = new Question("What protects life on planet Earth is protected from solar winds", "Earth's Magnetic Field", "The Ionosphere", "The Moon", "A Solar WindBreaker", "a");
+const q7 = new Question("What protects life on planet Earth from solar winds?", "Earth's Magnetic Field", "The Ionosphere", "The Moon", "A Solar WindBreaker", "a");
 questionObjectArray.push(q7);
-const q8 = new Question("Which man-made spacecraft to has been able to enter interstellar space?", "Pathfinder", "Juno", "Voyager 1", "No Satellite has gone that far", "c");
+const q8 = new Question("Which man-made spacecraft has been able to enter interstellar space?", "Pathfinder", "Juno", "Voyager 1", "No Satellite has gone that far", "c");
 questionObjectArray.push(q8);
 
 //create the game object literal, only need one so no constructor
@@ -47,7 +48,6 @@ questionObjectArray.push(q8);
 const game = {
   //properties
   intervalID: null,
-  state: null,
   timeLimit: null,
   timeLeft: null,
   correctAnswers: null,
@@ -58,15 +58,13 @@ const game = {
   //methods
   init: () => {
     game.current = game.getQuestion();
-    game.state = false;
-    game.timeLimit = 8000; //ms
+    game.timeLimit = 11000; //ms
     game.timeLeft = game.timeLimit / 1000; // this is to display the seconds
     game.correctAnswers = 0;
     game.incorrectAnswers = 0;
   },
 
   startGame: () => {
-    game.state = true;
     game.displayQuestion();
     game.startTimer();
   },
@@ -112,10 +110,11 @@ const game = {
 
   countDown: () => {
     game.timeLeft--;
-    if(game.timeLeft>=0){
+    if(game.timeLeft >= 0){
       $("#timer").html(game.timeLeft);
     } else {
-      game.stopTimer();
+      game.submitAnswer("z", game.current);
+      game.nextQuestion();
     }
   },
 
@@ -129,16 +128,15 @@ const game = {
 
   isGameOver: () => {
     if(questionObjectArray.length == 0){
-      game.state = false;
       game.gameOver();
       return true;
 
     } else {
-      game.state = true;
       return false;
     }
   },
   gameOver: ()=>{
+    game.stopTimer();
     $("form").hide();
     $("#submit").hide();
     $("#body").html("Congratulations, you've reached the End!");
@@ -147,17 +145,15 @@ const game = {
 };
 
 //need to do DOM manipulation
-//function for displaying the current question
 
+$("form").hide();
 $("#submit").hide();
 $("#submit").on("click",() => {
-  //did some checking here, need to implement game functionality yet though
   let ans = $("input[name=answer]:checked").val();
   game.submitAnswer(ans, game.current);
   game.nextQuestion();
 });
-$("form").hide();
-$("#submit").hide();
+
 $("#start").on("click", () => {
   game.init();
   game.startGame();
