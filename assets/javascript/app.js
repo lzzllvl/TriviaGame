@@ -28,18 +28,18 @@ const q1  = new Question("How many planets are in the Solar System?", "Eight", "
 questionObjectArray.push(q1);
 const q2 = new Question("What is the Nearest Galaxy to our Own?", "Olsec-1", "Milky Way", "Andromeda", "The Degoba System", "c");
 questionObjectArray.push(q2);
-// const q3 = new Question("What is the largest planet in the solar system?", "Uranus", "Mars", "Saturn", "Jupiter", "d");
-// questionObjectArray.push(q3);
-// const q4 = new Question("Which type of celestial body lies at the center of our galaxy?", "Star", "Black Hole", "Gas Cloud", "Pulsar", "b");
-// questionObjectArray.push(q4);
-// const q5 = new Question("Where do our solar system's comets come from?", "They break off of large moons", "The Asteroid Belt", "The Ort Cloud", "Cthulhu", "c");
-// questionObjectArray.push(q5);
-// const q6 = new Question("How long does it take light from the Sun to reach Earth", "15 seconds", "8 minutes", "1-2 hours", "25 milliseconds", "b");
-// questionObjectArray.push(q6);
-// const q7 = new Question("What protects life on planet Earth is protected from solar winds", "Earth's Magnetic Field", "The Ionosphere", "The Moon", "A Solar WindBreaker", "a");
-// questionObjectArray.push(q7);
-// const q8 = new Question("Which man-made spacecraft to has been able to enter interstellar space?", "Pathfinder", "Juno", "Voyager 1", "No Satellite has gone that far", "c");
-// questionObjectArray.push(q8);
+const q3 = new Question("What is the largest planet in the solar system?", "Uranus", "Mars", "Saturn", "Jupiter", "d");
+questionObjectArray.push(q3);
+const q4 = new Question("Which type of celestial body lies at the center of our galaxy?", "Star", "Black Hole", "Gas Cloud", "Pulsar", "b");
+questionObjectArray.push(q4);
+const q5 = new Question("Where do our solar system's comets come from?", "They break off of large moons", "The Asteroid Belt", "The Ort Cloud", "Cthulhu", "c");
+questionObjectArray.push(q5);
+const q6 = new Question("How long does it take light from the Sun to reach Earth", "15 seconds", "8 minutes", "1-2 hours", "25 milliseconds", "b");
+questionObjectArray.push(q6);
+const q7 = new Question("What protects life on planet Earth is protected from solar winds", "Earth's Magnetic Field", "The Ionosphere", "The Moon", "A Solar WindBreaker", "a");
+questionObjectArray.push(q7);
+const q8 = new Question("Which man-made spacecraft to has been able to enter interstellar space?", "Pathfinder", "Juno", "Voyager 1", "No Satellite has gone that far", "c");
+questionObjectArray.push(q8);
 
 //create the game object literal, only need one so no constructor
 
@@ -68,8 +68,14 @@ const game = {
   startGame: () => {
     game.state = true;
     game.displayQuestion();
-    game.addAnswerClicks();
     game.startTimer();
+  },
+  nextQuestion: ()=> {
+    if(!game.isGameOver()){
+      game.current = game.getQuestion();
+      game.displayQuestion();
+      game.resetTimer();
+    }
   },
 
   resetTimer: () => {
@@ -85,24 +91,15 @@ const game = {
     else {
       game.incorrectAnswers++;
     }
-    game.current = game.getQuestion();
-    // game.displayQuestion();
-    // game.addAnswerClicks();
-    game.resetTimer();
-  },
-
-  checkAnswer: () => {
-
-
+    $("#correct").html("Correct: "+game.correctAnswers);
+    $("#incorrect").html("Incorrect: "+game.incorrectAnswers);
   },
 
   getQuestion: () => {
     //returns a random question from the question array.
-    if(!game.isGameOver()){
-      let q = questionObjectArray.splice(Math.floor(Math.random() * questionObjectArray.length), 1 )
-      q = q[0];//splice is going to return a single item array;
-      return q;
-    }
+    let q = questionObjectArray.splice(Math.floor(Math.random() * questionObjectArray.length), 1 )
+    q = q[0];//splice is going to return a single item array;
+    return q;
   },
 
   startTimer: () => {
@@ -122,17 +119,6 @@ const game = {
     }
   },
 
-  addAnswerClicks: () => {
-      const letters = ["a", "b", "c", "d"];
-      for(let i = 0; i < letters.length; i++){
-        let id = "#"+letters[i];
-        $(id).on("click", () => {
-          //game.submitAnswer has not been implemented yet.
-          game.submitAnswer(letters[i], game.current);
-        })
-      }
-    },
-
   displayQuestion: () => {
       $("#body").html(game.current.body);
       $("#a").html(game.current.a);
@@ -144,27 +130,31 @@ const game = {
   isGameOver: () => {
     if(questionObjectArray.length == 0){
       game.state = false;
+      game.gameOver();
       return true;
-      console.log("question Array empty");
+
     } else {
       game.state = true;
       return false;
     }
+  },
+  gameOver: ()=>{
+    $("form").hide();
+    $("#submit").hide();
+    $("#body").html("Congratulations, you've reached the End!");
+    $("#timer").remove();
   }
 };
-//TODO need to fix the submit answer and display question functions to give
-// global access
 
 //need to do DOM manipulation
 //function for displaying the current question
 
-// let current = game.getQuestion();
-// current = current[0]; // get question returns a one item array
 $("#submit").hide();
 $("#submit").on("click",() => {
   //did some checking here, need to implement game functionality yet though
-  console.log("triggering submit")
-  console.log($("input[name=answer]:checked").val());
+  let ans = $("input[name=answer]:checked").val();
+  game.submitAnswer(ans, game.current);
+  game.nextQuestion();
 });
 $("form").hide();
 $("#submit").hide();
@@ -174,6 +164,5 @@ $("#start").on("click", () => {
 
   $("form").show();
   $("#submit").show();
-
   $("#start").hide();
 });

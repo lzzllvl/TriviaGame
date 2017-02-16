@@ -10,24 +10,31 @@
     <title>Trivia Game</title>
   </head>
   <body>
-  <header>
-    <h1>Trivia Game</h1>
-  </header>
-  <section id="question">
-    <span id="timer"></span><br>
-    <span id="body"></span>
-    <form id="answers">
-      <input type="radio" name="answer" value="a"><span id="a"></span><br>
-      <input type="radio" name="answer" value="b"><span id="b"></span><br>
-      <input type="radio" name="answer" value="c"><span id="c"></span><br>
-      <input type="radio" name="answer" value="d"><span id="d"></span><br><br>
-    </form>
-    <button id="submit">Submit</button>
-  </section>
-  <button id="start">Start Game</button>
-  <aside id="game-data">
-
-  </aside>
+    <div class="main-container">
+      <header>
+        <h1>Galactic Trivia</h1>
+      </header>
+      <section id="question">
+        <span id="timer"></span><br>
+        <span id="body"></span>
+        <form id="answers">
+          <input type="radio" name="answer" value="a"><span id="a"></span><br>
+          <input type="radio" name="answer" value="b"><span id="b"></span><br>
+          <input type="radio" name="answer" value="c"><span id="c"></span><br>
+          <input type="radio" name="answer" value="d"><span id="d"></span><br><br>
+        </form>
+        <button id="submit">Submit</button>
+      </section>
+      <button id="start">Start Game</button>
+      <aside id="game-data">
+        <span id="correct">Correct: 0</span>
+        <span id="incorrect">Incorrect: 0</span>
+      </aside>
+      <div class="push"></div>
+    </div>
+    <footer id="footer">
+      <p>&copy; Copyright 2017 - Gregory Lee</p>
+    </footer>
   </body>
   <script type="text/javascript" src="assets/javascript/app.js"></script>
 </html>
