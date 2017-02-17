@@ -41,7 +41,9 @@ const q7 = new Question("What protects life on planet Earth from solar winds?", 
 questionObjectArray.push(q7);
 const q8 = new Question("Which man-made spacecraft has been able to enter interstellar space?", "Pathfinder", "Juno", "Voyager 1", "No Satellite has gone that far", "c");
 questionObjectArray.push(q8);
-
+const q9 = new Question("Which element is the most abundant in our universe?", "Nitrogen", "Iron", "Hydrogen", "Unobtainium", "c");
+questionObjectArray.push(q9);
+const q10 = new Question("Who was the first human to go to space?", "Neil Armstrong", "Valentina Tereshkova", "Laika", "Yuri Gagarin", "d");
 //create the game object literal, only need one so no constructor
 
 //this is performing controller logic
@@ -57,6 +59,7 @@ const game = {
 
   //methods
   init: () => {
+    //sets the game properties and gets first question
     game.current = game.getQuestion();
     game.timeLimit = 11000; //ms
     game.timeLeft = game.timeLimit / 1000; // this is to display the seconds
@@ -65,11 +68,14 @@ const game = {
   },
 
   startGame: () => {
+    //starts timer and displays the question
     game.displayQuestion();
     game.startTimer();
   },
   nextQuestion: ()=> {
+    //isGameOver() returns true if question array is empty
     if(!game.isGameOver()){
+      //splice out another question and display, reset timer
       game.current = game.getQuestion();
       game.displayQuestion();
       game.resetTimer();
@@ -77,11 +83,12 @@ const game = {
   },
 
   resetTimer: () => {
+    //resets the timer
     game.timeLeft = game.timeLimit / 1000; //this is to display in seconds
   },
 
   submitAnswer: (answer, question) => {
-    //this game object method will call the question method checkAnswer()
+    //this game object method will call the question method checkAnswer
     //increments either correct or incorrect answer counts
     if(question.isCorrectAnswer(answer)){
       game.correctAnswers++;
@@ -89,6 +96,7 @@ const game = {
     else {
       game.incorrectAnswers++;
     }
+    //updatethe game data html
     $("#correct").html("Correct: "+game.correctAnswers);
     $("#incorrect").html("Incorrect: "+game.incorrectAnswers);
   },
@@ -101,24 +109,31 @@ const game = {
   },
 
   startTimer: () => {
+    //setting the intervalID and calling countDown() every second
     game.intervalID = setInterval(game.countDown, 1000);
   },
 
   stopTimer: () => {
+    //stop the countDown() calls
     clearInterval(game.intervalID);
   },
 
   countDown: () => {
+    //decrement time left
     game.timeLeft--;
+    //check 0
     if(game.timeLeft >= 0){
       $("#timer").html(game.timeLeft);
     } else {
+      //submit answer that is always wrong if none has been chosen
+      //this prevents the previous answer check from counting on 0
       game.submitAnswer("z", game.current);
       game.nextQuestion();
     }
   },
 
   displayQuestion: () => {
+    //display question on html
       $("#body").html(game.current.body);
       $("#a").html(game.current.a);
       $("#b").html(game.current.b);
@@ -127,6 +142,7 @@ const game = {
     },
 
   isGameOver: () => {
+    //if question array is empty, call game over, return true
     if(questionObjectArray.length == 0){
       game.gameOver();
       return true;
@@ -136,28 +152,33 @@ const game = {
     }
   },
   gameOver: ()=>{
+    //stop and remover timer, hide form and submit, change body to end message
     game.stopTimer();
     $("form").hide();
     $("#submit").hide();
-    $("#body").html("Congratulations, you've reached the End!");
+    $("#body").html("Congratulations, you've reached the end!");
     $("#timer").remove();
   }
 };
 
-//need to do DOM manipulation
 
+//hide question form and submit button initially
 $("form").hide();
 $("#submit").hide();
+//add a click event to submit button, this uses a $selector because there
+//the form action was not helpful, this causes the previous answer to be checked
+//at the beginning of the next question.
 $("#submit").on("click",() => {
   let ans = $("input[name=answer]:checked").val();
   game.submitAnswer(ans, game.current);
   game.nextQuestion();
 });
 
+//start button on click event, initialize game and start it.
 $("#start").on("click", () => {
   game.init();
   game.startGame();
-
+  //show form and submit button, hide start button
   $("form").show();
   $("#submit").show();
   $("#start").hide();
