@@ -44,6 +44,12 @@ questionObjectArray.push(q8);
 const q9 = new Question("Which element is the most abundant in our universe?", "Nitrogen", "Iron", "Hydrogen", "Unobtainium", "c");
 questionObjectArray.push(q9);
 const q10 = new Question("Who was the first human to go to space?", "Neil Armstrong", "Valentina Tereshkova", "Laika", "Yuri Gagarin", "d");
+questionObjectArray.push(q10);
+
+//just experimenting here with some built-in methods
+questionObjectArray.map((currentValue)=>{
+  Object.seal(currentValue);
+});
 //create the game object literal, only need one so no constructor
 
 //this is performing controller logic
